@@ -13,14 +13,16 @@ var fs=require("fs");
 var util=require("util");
 var redis=require("redis");
 
-var client = redis.createClient();
- 
+// var client = redis.createClient();
+
+var cache = require('memory-cache');
+var access_token="";
 // if you'd like to select database 3, instead of 0 (default), call 
 // client.select(3, function() { /* ... */ }); 
  
-client.on("error", function (err) {
-    console.log("Error " + err);
-});
+// client.on("error", function (err) {
+//     console.log("Error " + err);
+// });
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -54,7 +56,7 @@ function sha1(str){
   var oriArray = new Array();
   oriArray[0] = nonce;
   oriArray[1] = timestamp;
-  oriArray[2] = "940421";//ÕâÀïÊÇÄãÔÚÎ¢ÐÅ¿ª·¢ÕßÖÐÐÄÒ³ÃæÀïÌîµÄtoken£¬¶ø²»ÊÇ****
+  oriArray[2] = "940421";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¢ï¿½Å¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tokenï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½****
   oriArray.sort();
   var original = oriArray.join('');
   console.log("Original str : " + original);
@@ -70,49 +72,68 @@ function sha1(str){
     console.log("Failed!");
   }
 })*/
-
-
-  request.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx0d215ec078c80bc0&secret=a6ee3f5b61b3ee85307840f5853d2785', function (err, data) {
-    console.log(data.body);
-	var access_token = JSON.parse(data.body).access_token;
-    var menu = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + access_token;
-    var message="https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token="+access_token;
+app.use(function(req, res, next){
+  if(cache.get("access_token")){
+    access_token=cache.get("access_token");
     console.log(access_token);
-    console.log(menu);
-    request.post(menu, {form:`{
+    next();
+  }else{
+    request.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx0d215ec078c80bc0&secret=a6ee3f5b61b3ee85307840f5853d2785', function (err, data) {
+          cache.put("access_token", JSON.parse(data.body).access_token,7199000,function(key,value){
+            if(value){
+              access_token=cache.get("access_token");
+              console.log(value);
+              next();
+            }
+          });
+        })
+  }
+        
       
-        "button":[
-     {	
-          "type":"click",
-          "name":"Search",
-          "key":"V1001_TODAY_MUSIC"
-      },
-      {
-           "name":"menu",
-           "sub_button":[
-           {	
-               "type":"view",
-               "name":"Food",
-               "url":"http://120.24.239.232:8000/"
-            },
-            {
-               "type":"view",
-               "name":"video",
-               "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0d215ec078c80bc0&redirect_uri=http%3a%2f%2ffood.ngrok.xiaomiqiu.cn%2f&response_type=code&scope=snsapi_base"
-            },
-            {
-               "type":"click",
-               "name":"music",
-               "key":"V1001_GOOD"
-            }]
-       }]
-      }`}, function(err, data) {
-         console.log(err);
-        // console.log(data);
-      }
-    );
+
+})
+
+  // request.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx0d215ec078c80bc0&secret=a6ee3f5b61b3ee85307840f5853d2785', function (err, data) {
+  //   console.log(data.body);
+	//   var access_token = JSON.parse(data.body).access_token;
+  //   var menu = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + access_token;
+  //   var message="https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token="+access_token;
+  //   console.log(access_token);
+  //   console.log(menu);
+  //   request.post(menu, {form:`{
+      
+  //       "button":[
+  //    {	
+  //         "type":"click",
+  //         "name":"Search",
+  //         "key":"V1001_TODAY_MUSIC"
+  //     },
+  //     {
+  //          "name":"menu",
+  //          "sub_button":[
+  //          {	
+  //              "type":"view",
+  //              "name":"Food",
+  //              "url":"http://120.24.239.232:8000/"
+  //           },
+  //           {
+  //              "type":"view",
+  //              "name":"video",
+  //              "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0d215ec078c80bc0&redirect_uri=http%3a%2f%2ffood.ngrok.xiaomiqiu.cn%2f&response_type=code&scope=snsapi_base"
+  //           },
+  //           {
+  //              "type":"click",
+  //              "name":"music",
+  //              "key":"V1001_GOOD"
+  //           }]
+  //      }]
+  //     }`}, function(err, data) {
+  //        console.log(err);
+  //       // console.log(data);
+  //     }
+  //   );
    
-  })
+  // })
   
   
 app.use(bodyParser.xml({
@@ -135,7 +156,7 @@ app.use(function (req, res, next) {
 			<FromUserName><![CDATA[${xml.tousername}]]></FromUserName>
 			<CreateTime>${parseInt(new Date().valueOf() / 1000)}</CreateTime>
 			<MsgType><![CDATA[text]]></MsgType>
-			<Content><![CDATA[ÄãºÃ]]></Content>
+			<Content><![CDATA[ï¿½ï¿½ï¿½]]></Content>
 			</xml>`;
 				res.send(resMsg);
 			}else{
