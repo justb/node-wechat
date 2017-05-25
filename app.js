@@ -93,47 +93,28 @@ app.use(function(req, res, next){
 
 })
 
-  // request.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx0d215ec078c80bc0&secret=a6ee3f5b61b3ee85307840f5853d2785', function (err, data) {
-  //   console.log(data.body);
-	//   var access_token = JSON.parse(data.body).access_token;
-  //   var menu = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + access_token;
-  //   var message="https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token="+access_token;
-  //   console.log(access_token);
-  //   console.log(menu);
-  //   request.post(menu, {form:`{
+
+	  var access_token = JSON.parse(data.body).access_token;
+    var menu = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + access_token;
+    // var message="https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token="+access_token;
+    console.log(access_token);
+    console.log(menu);
+    request.post(menu, {form:`{
       
-  //       "button":[
-  //    {	
-  //         "type":"click",
-  //         "name":"Search",
-  //         "key":"V1001_TODAY_MUSIC"
-  //     },
-  //     {
-  //          "name":"menu",
-  //          "sub_button":[
-  //          {	
-  //              "type":"view",
-  //              "name":"Food",
-  //              "url":"http://120.24.239.232:8000/"
-  //           },
-  //           {
-  //              "type":"view",
-  //              "name":"video",
-  //              "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0d215ec078c80bc0&redirect_uri=http%3a%2f%2ffood.ngrok.xiaomiqiu.cn%2f&response_type=code&scope=snsapi_base"
-  //           },
-  //           {
-  //              "type":"click",
-  //              "name":"music",
-  //              "key":"V1001_GOOD"
-  //           }]
-  //      }]
-  //     }`}, function(err, data) {
-  //        console.log(err);
-  //       // console.log(data);
-  //     }
-  //   );
-   
-  // })
+        "button":[
+     
+      {
+            "type":"view",
+           "name":"欢迎点菜",
+           "url":"http://120.24.239.232:8000/"
+
+       }]
+      }`}, function(err, data) {
+         console.log(err);
+        // console.log(data);
+      }
+    );
+
   
   
 app.use(bodyParser.xml({
