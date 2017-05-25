@@ -147,8 +147,10 @@ app.use(bodyParser.xml({
 app.use(function (req, res, next) {
 		console.log(req.url);
 		//res.writeHead(200, {'Content-Type': 'application/xml;charset=utf-8'});
-		fs.writeFile('C:\\a.json',util.inspect(req.body.xml,{depth: 100 }));
+		// fs.writeFile('C:\\a.json',util.inspect(req.body.xml,{depth: 100 }));
+    
 		if(req.body.xml){
+      console.log(xml);
 			var xml=req.body.xml;
 			if(xml.msgtype==='text'){
 				var resMsg=`<xml>
