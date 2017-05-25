@@ -150,16 +150,29 @@ app.use(function (req, res, next) {
 		// fs.writeFile('C:\\a.json',util.inspect(req.body.xml,{depth: 100 }));
     
 		if(req.body.xml){
-      console.log(xml);
+      
 			var xml=req.body.xml;
+      console.log(xml);
+			var resMsg='';
 			if(xml.msgtype==='text'){
-				var resMsg=`<xml>
-			<ToUserName><![CDATA[${xml.fromusername}]]></ToUserName>
-			<FromUserName><![CDATA[${xml.tousername}]]></FromUserName>
-			<CreateTime>${parseInt(new Date().valueOf() / 1000)}</CreateTime>
-			<MsgType><![CDATA[text]]></MsgType>
-			<Content><![CDATA[123]]></Content>
-			</xml>`;
+				if(xml.content.indexOf("菜单")>-1){
+					resMsg=`<xml>
+						<ToUserName><![CDATA[${xml.fromusername}]]></ToUserName>
+						<FromUserName><![CDATA[${xml.tousername}]]></FromUserName>
+						<CreateTime>${parseInt(new Date().valueOf() / 1000)}</CreateTime>
+						<MsgType><![CDATA[text]]></MsgType>
+						<Content><![CDATA["http://120.24.239.232/"]]></Content>
+						</xml>`;
+				}else{
+					resMsg=`<xml>
+						<ToUserName><![CDATA[${xml.fromusername}]]></ToUserName>
+						<FromUserName><![CDATA[${xml.tousername}]]></FromUserName>
+						<CreateTime>${parseInt(new Date().valueOf() / 1000)}</CreateTime>
+						<MsgType><![CDATA[text]]></MsgType>
+						<Content><![CDATA["我不明白您的意思"]]></Content>
+						</xml>`;
+				}
+				
 				res.send(resMsg);
 			}else{
 				console.log("next");
