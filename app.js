@@ -45,7 +45,7 @@ function sha1(str){
   return str;
 }
 
-/*app.use(function(req,res,next){
+app.use(function(req,res,next){
   var query = url.parse(req.url,true).query;
   //console.log("*** URL:" + req.url);
   //console.log(query);
@@ -56,14 +56,14 @@ function sha1(str){
   var oriArray = new Array();
   oriArray[0] = nonce;
   oriArray[1] = timestamp;
-  oriArray[2] = "940421";//����������΢�ſ���������ҳ�������token��������****
+  oriArray[2] = "940421";//
   oriArray.sort();
   var original = oriArray.join('');
   console.log("Original str : " + original);
   console.log("Signature : " + signature );
   var scyptoString = sha1(original);
   if(signature == scyptoString){
-    //res.end(echostr);
+    res.end(echostr);
     console.log("Confirm and send echo back");
 
     next();
@@ -71,7 +71,7 @@ function sha1(str){
     res.end("false");
     console.log("Failed!");
   }
-})*/
+})
 app.use(function(req, res, next){
   if(cache.get("access_token")){
     access_token=cache.get("access_token");
@@ -111,7 +111,7 @@ app.use(function(req, res, next){
        }]
       }`}, function(err, data) {
          console.log(err);
-        // console.log(data);
+        console.log(data);
       }
     );
 
