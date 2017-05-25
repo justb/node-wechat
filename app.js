@@ -142,7 +142,7 @@ app.use(function (req, res, next) {
 						<FromUserName><![CDATA[${xml.tousername}]]></FromUserName>
 						<CreateTime>${parseInt(new Date().valueOf() / 1000)}</CreateTime>
 						<MsgType><![CDATA[text]]></MsgType>
-						<Content><![CDATA[http://120.24.239.232:8000/]]></Content>
+						<Content><![CDATA[http://food.ngrok.xiaomiqiu.cn/]]></Content>
 						</xml>`;
 				}else if(xml.content.indexOf("活动")>-1){
 					resMsg=`<xml>
