@@ -11,7 +11,7 @@ var crypto = require("crypto");
 var request = require("request");
 var fs=require("fs");
 var util=require("util");
-var redis=require("redis");
+// var redis=require("redis");
 
 // var client = redis.createClient();
 
@@ -156,7 +156,7 @@ app.use(function (req, res, next) {
 			<FromUserName><![CDATA[${xml.tousername}]]></FromUserName>
 			<CreateTime>${parseInt(new Date().valueOf() / 1000)}</CreateTime>
 			<MsgType><![CDATA[text]]></MsgType>
-			<Content><![CDATA[���]]></Content>
+			<Content><![CDATA[123]]></Content>
 			</xml>`;
 				res.send(resMsg);
 			}else{
