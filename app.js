@@ -94,10 +94,10 @@ app.use(function(req, res, next){
 })
 
 
-	  var access_token = JSON.parse(data.body).access_token;
-    var menu = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + access_token;
+	  //var access_token = JSON.parse(data.body).access_token;
+    var menu = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + cache.get("access_token");
     // var message="https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token="+access_token;
-    console.log(access_token);
+    console.log(cache.get("access_token"));
     console.log(menu);
     request.post(menu, {form:`{
       
@@ -142,7 +142,7 @@ app.use(function (req, res, next) {
 						<FromUserName><![CDATA[${xml.tousername}]]></FromUserName>
 						<CreateTime>${parseInt(new Date().valueOf() / 1000)}</CreateTime>
 						<MsgType><![CDATA[text]]></MsgType>
-						<Content><![CDATA["http://120.24.239.232/"]]></Content>
+						<Content><![CDATA[http://120.24.239.232:8000/]]></Content>
 						</xml>`;
 				}else{
 					resMsg=`<xml>
@@ -150,7 +150,7 @@ app.use(function (req, res, next) {
 						<FromUserName><![CDATA[${xml.tousername}]]></FromUserName>
 						<CreateTime>${parseInt(new Date().valueOf() / 1000)}</CreateTime>
 						<MsgType><![CDATA[text]]></MsgType>
-						<Content><![CDATA["我不明白您的意思"]]></Content>
+						<Content><![CDATA[我不明白您的意思]]></Content>
 						</xml>`;
 				}
 				
