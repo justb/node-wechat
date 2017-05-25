@@ -45,33 +45,33 @@ function sha1(str){
   return str;
 }
 
-app.use(function(req,res,next){
-  var query = url.parse(req.url,true).query;
-  //console.log("*** URL:" + req.url);
-  //console.log(query);
-  var signature = query.signature;
-  var echostr = query.echostr;
-  var timestamp = query['timestamp'];
-  var nonce = query.nonce;
-  var oriArray = new Array();
-  oriArray[0] = nonce;
-  oriArray[1] = timestamp;
-  oriArray[2] = "940421";//
-  oriArray.sort();
-  var original = oriArray.join('');
-  console.log("Original str : " + original);
-  console.log("Signature : " + signature );
-  var scyptoString = sha1(original);
-  if(signature == scyptoString){
-    res.end(echostr);
-    console.log("Confirm and send echo back");
+// app.use(function(req,res,next){
+//   var query = url.parse(req.url,true).query;
+//   //console.log("*** URL:" + req.url);
+//   //console.log(query);
+//   var signature = query.signature;
+//   var echostr = query.echostr;
+//   var timestamp = query['timestamp'];
+//   var nonce = query.nonce;
+//   var oriArray = new Array();
+//   oriArray[0] = nonce;
+//   oriArray[1] = timestamp;
+//   oriArray[2] = "940421";//
+//   oriArray.sort();
+//   var original = oriArray.join('');
+//   console.log("Original str : " + original);
+//   console.log("Signature : " + signature );
+//   var scyptoString = sha1(original);
+//   if(signature == scyptoString){
+//     res.end(echostr);
+//     console.log("Confirm and send echo back");
 
-    next();
-  }else {
-    res.end("false");
-    console.log("Failed!");
-  }
-})
+//     next();
+//   }else {
+//     res.end("false");
+//     console.log("Failed!");
+//   }
+// })
 app.use(function(req, res, next){
   if(cache.get("access_token")){
     access_token=cache.get("access_token");
@@ -106,7 +106,7 @@ app.use(function(req, res, next){
       {
             "type":"view",
            "name":"欢迎点菜",
-           "url":"http://120.24.239.232:8000/"
+           "url":"http://food.ngrok.xiaomiqiu.cn/"
 
        }]
       }`}, function(err, data) {
@@ -143,6 +143,14 @@ app.use(function (req, res, next) {
 						<CreateTime>${parseInt(new Date().valueOf() / 1000)}</CreateTime>
 						<MsgType><![CDATA[text]]></MsgType>
 						<Content><![CDATA[http://120.24.239.232:8000/]]></Content>
+						</xml>`;
+				}else if(xml.content.indexOf("活动")>-1){
+					resMsg=`<xml>
+						<ToUserName><![CDATA[${xml.fromusername}]]></ToUserName>
+						<FromUserName><![CDATA[${xml.tousername}]]></FromUserName>
+						<CreateTime>${parseInt(new Date().valueOf() / 1000)}</CreateTime>
+						<MsgType><![CDATA[text]]></MsgType>
+						<Content><![CDATA[100积分可以换10元抵用券哦]]></Content>
 						</xml>`;
 				}else{
 					resMsg=`<xml>
